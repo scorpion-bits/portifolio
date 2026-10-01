@@ -48,10 +48,3 @@ com um `id` e um `data-title`; os pontos e o índice são gerados sozinhos.
   (os cartões de jogos hoje são só texto).
 - Data da roda aberta no SESC Araraquara (hoje o slide só cita o evento).
 - Contato (e-mail) do estúdio, se quiserem exibir.
-
-## Prévia do site principal
-
-`public/previa/` é uma cópia da branch `claude/projetos-portfolio` do repositório
-`scorpion-bits.github.io`, publicada em `/portifolio/previa/` só para testar o site
-novo antes do merge na `main`. As páginas têm `noindex`. É um retrato de um commit
-(não acompanha a branch sozinho) e pode ser apagada quando o site novo for ao ar.
