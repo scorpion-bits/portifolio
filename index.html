@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scorpion Bits · Estúdio indie de jogos</title>
+    <meta
+      name="description"
+      content="Scorpion Bits é um estúdio indie de desenvolvimento de jogos: jogos próprios, educação em desenvolvimento de jogos e projetos sob demanda."
+    />
+    <meta property="og:title" content="Scorpion Bits · Estúdio indie de jogos" />
+    <meta
+      property="og:description"
+      content="Jogos próprios, educação e projetos sob demanda. Conheça o estúdio, os jogos e o que buscamos."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#2a1617" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <noscript>
+      <style>
+        .slide { position: static !important; opacity: 1 !important; visibility: visible !important; min-height: 100vh; }
+        #deck { position: static !important; }
+        .hud { display: none !important; }
+      </style>
+    </noscript>
+  </head>
+  <body>
+    <div id="stage" aria-hidden="true"></div>
+
+    <header class="brand">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__name">Scorpion Bits</span>
+    </header>
+
+    <main id="deck">
+      <!-- 1 · CAPA -->
+      <section class="slide slide--cover" id="capa" data-title="Capa">
+        <div class="slide__inner slide__inner--cover">
+          <p class="eyebrow">Estúdio indie de jogos · fundado em 2026</p>
+          <h1 class="display">Scorpion<br />Bits</h1>
+          <p class="lead">
+            Fazemos jogos próprios, ensinamos quem quer fazer jogos e
+            aceitamos projetos sob demanda.
+          </p>
+          <ul class="chips" aria-label="Resumo">
+            <li><strong>2</strong> jogos publicados</li>
+            <li><strong>3</strong> em desenvolvimento</li>
+            <li><strong>45h</strong> de curso ministradas</li>
+          </ul>
+          <button class="btn" type="button" data-next>Começar apresentação <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <!-- 2 · ESTÚDIO -->
+      <section class="slide" id="estudio" data-title="O estúdio">
+        <div class="slide__inner">
+          <p class="eyebrow">01 · O estúdio</p>
+          <h2 class="title">Um estúdio indie em crescimento e profissionalização</h2>
+          <p class="body">
+            A Scorpion Bits nasceu em 2026 de um grupo de estudantes de
+            tecnologia e desenvolvimento de jogos. Hoje somos <strong>4 sócios</strong>
+            com projetos próprios, jogos publicados e atividade de formação, e
+            estamos estruturando o estúdio como um negócio sustentável.
+          </p>
+          <blockquote class="quote">
+            Expandir a área de jogos na região e espalhar a cultura dos jogos
+            por meio do desenvolvimento, educação e criação de projetos.
+            <cite>Nossa missão</cite>
+          </blockquote>
+          <ul class="team" aria-label="Sócios">
+            <li class="card">
+              <h3>Thales Miguel Hajes</h3>
+              <p>Música e sound design, game design, negócios e organização</p>
+            </li>
+            <li class="card">
+              <h3>Milan Bahrami</h3>
+              <p>Programação, sistemas e game design</p>
+            </li>
+            <li class="card">
+              <h3>Giovane Sotratto</h3>
+              <p>Programação e gameplay</p>
+            </li>
+            <li class="card">
+              <h3>Christian Amancio</h3>
+              <p>Arte e animação</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3 · JOGOS PUBLICADOS -->
+      <section class="slide" id="jogos" data-title="Jogos publicados">
+        <div class="slide__inner">
+          <p class="eyebrow">02 · Jogos publicados</p>
+          <h2 class="title">Dois jogos no ar, gratuitos no itch.io</h2>
+          <div class="grid grid--2">
+            <article class="card card--game">
+              <p class="tag">Ação · pixel art · Web, Windows e Linux · Gratuito</p>
+              <h3>Tirania</h3>
+              <p class="tagline">“Quando a coroa foge com a vida do povo, resta a uma mulher trazer a justiça.”</p>
+              <p>
+                Um reino abandonado: a nobreza fugiu levando toda a comida e os
+                poços de água. Como Aurora, você resgata provisões nas ruelas
+                esquecidas e sobe ao trono para enfrentar o rei em um duelo decisivo.
+              </p>
+              <a class="link" href="https://scorpionbits.itch.io/tirania" target="_blank" rel="noopener">Jogar no itch.io <span aria-hidden="true">↗</span></a>
+            </article>
+            <article class="card card--game">
+              <p class="tag">Ação espacial · Godot · Gratuito</p>
+              <h3>AstroDash</h3>
+              <p class="tagline">Navegue, desvie, sobreviva.</p>
+              <p>
+                Gameplay direto e rápido, baseado em pilotar e desviar de
+                meteoros e obstáculos. Um Modo História está em desenvolvimento.
+              </p>
+              <a class="link" href="https://scorpionbits.itch.io/astrodash" target="_blank" rel="noopener">Jogar no itch.io <span aria-hidden="true">↗</span></a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 · EM DESENVOLVIMENTO -->
+      <section class="slide" id="desenvolvimento" data-title="Em desenvolvimento">
+        <div class="slide__inner">
+          <p class="eyebrow">03 · Em desenvolvimento</p>
+          <h2 class="title">O que vem a seguir</h2>
+          <div class="grid grid--3">
+            <article class="card card--dev">
+              <p class="tag tag--status">Pré-produção · design documentado</p>
+              <h3>Sitis</h3>
+              <p>
+                Ação top-down em pixel art. Presa numa dungeon onde a água é
+                escassa, Iris luta pela superfície com poderes que gastam a
+                própria hidratação: uma única barra é vida e energia.
+              </p>
+              <p class="meta">Godot 4 · bestiário e boss planejados</p>
+            </article>
+            <article class="card card--dev">
+              <p class="tag tag--status">Em desenvolvimento</p>
+              <h3>Tower Defence</h3>
+              <p>
+                Tower defense com árvore de habilidades e crafting: o jogador
+                fabrica as próprias torres. 8 tipos de torre já configurados no
+                projeto.
+              </p>
+              <p class="meta">Godot 4</p>
+            </article>
+            <article class="card card--dev card--noir">
+              <img
+                class="pixelated"
+                src="./assets/noir/escritorio.png"
+                alt="Pixel art de um detetive de cabelo claro em seu escritório, com mapa, relógio, telefone e lâmpada de mesa."
+                width="293"
+                height="316"
+                loading="lazy"
+              />
+              <p class="tag tag--status">Pré-produção · arte e conceito</p>
+              <h3>Projeto noir</h3>
+              <p>
+                Jogo de investigação com estética noir. Direção de arte e
+                personagem principal já desenvolvidos; sistemas de investigação,
+                diálogo e decisões em planejamento.
+              </p>
+              <p class="meta">Godot 4 · nome provisório</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 · EDUCAÇÃO -->
+      <section class="slide" id="educacao" data-title="Educação">
+        <div class="slide__inner">
+          <p class="eyebrow">04 · Educação</p>
+          <h2 class="title">Game Lab SESC: organizamos e ministramos</h2>
+          <p class="body">
+            De 4 de agosto a 22 de setembro de 2026, conduzimos um curso de
+            desenvolvimento de jogos 2D com plano de ensino próprio: game
+            design, programação em Godot, pixel art e animação, música e sound
+            design, com projeto em equipe.
+          </p>
+          <ul class="stats" aria-label="Números do Game Lab">
+            <li><strong>45h</strong><span>15 aulas de 3h</span></li>
+            <li><strong>17</strong><span>alunos simultâneos</span></li>
+            <li><strong>13/13</strong><span>respondentes da pesquisa fariam outra edição</span></li>
+          </ul>
+          <blockquote class="quote quote--small">
+            Tudo, esse curso é muito bom. Queria que tivesse mais e durasse MUITO mais tempo.
+            <cite>Aluno, pesquisa de satisfação</cite>
+          </blockquote>
+          <ul class="next" aria-label="Próximos passos">
+            <li>O SESC sinalizou nova edição no próximo ano.</li>
+            <li>Roda aberta sobre ter uma empresa de desenvolvimento de jogos, no SESC Araraquara, durante um evento de jogos.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 6 · SERVIÇOS -->
+      <section class="slide" id="servicos" data-title="Serviços">
+        <div class="slide__inner">
+          <p class="eyebrow">05 · Serviços</p>
+          <h2 class="title">Como podemos trabalhar com você</h2>
+          <div class="grid grid--4">
+            <article class="card">
+              <h3>Formação</h3>
+              <p>Oficinas e cursos de desenvolvimento de jogos para instituições, com plano de ensino e acompanhamento próximo.</p>
+            </article>
+            <article class="card">
+              <h3>Desenvolvimento sob demanda</h3>
+              <p>Jogos 2D em Godot: programação, sistemas e gameplay, do design à publicação.</p>
+            </article>
+            <article class="card">
+              <h3>Arte e animação 2D</h3>
+              <p>Pixel art, personagens, cenários, spritesheets e animação.</p>
+            </article>
+            <article class="card">
+              <h3>Música e sound design</h3>
+              <p>Trilha, efeitos sonoros e áudio de interface.</p>
+            </article>
+          </div>
+          <p class="note">Aceitamos projetos sob demanda com escopo e prazo claros.</p>
+        </div>
+      </section>
+
+      <!-- 7 · MOMENTO E OBJETIVOS -->
+      <section class="slide" id="momento" data-title="Onde estamos">
+        <div class="slide__inner">
+          <p class="eyebrow">06 · Onde estamos e o que buscamos</p>
+          <h2 class="title">Já temos produtos e experiência para conversar com o mercado</h2>
+          <div class="grid grid--2">
+            <article class="card">
+              <h3>Onde estamos</h3>
+              <p>
+                Estúdio em estruturação: identidade, site, jogos publicados,
+                protótipos e equipe multidisciplinar. Estamos amadurecendo os
+                produtos, profissionalizando processos e construindo marca.
+              </p>
+            </article>
+            <article class="card">
+              <h3>O que buscamos</h3>
+              <ul class="list">
+                <li><strong>Publicadoras:</strong> financiamento, marketing e distribuição para nossos jogos.</li>
+                <li><strong>Clientes e parceiros:</strong> projetos sob demanda e formação em desenvolvimento de jogos.</li>
+                <li><strong>Rede:</strong> contato com o mercado e com o ecossistema de jogos.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8 · CONTATO -->
+      <section class="slide" id="contato" data-title="Contato">
+        <div class="slide__inner">
+          <p class="eyebrow">07 · Contato</p>
+          <h2 class="title">Vamos conversar?</h2>
+          <p class="body">Jogue nossos jogos, conheça o estúdio e fale com a gente.</p>
+          <ul class="links">
+            <li><a class="btn" href="https://scorpionbits.com" target="_blank" rel="noopener">scorpionbits.com <span aria-hidden="true">↗</span></a></li>
+            <li><a class="btn btn--ghost" href="https://scorpionbits.itch.io" target="_blank" rel="noopener">itch.io/scorpionbits <span aria-hidden="true">↗</span></a></li>
+            <li><a class="btn btn--ghost" href="https://github.com/scorpion-bits" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a></li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <!-- HUD: dica, navegação e índice -->
+    <div class="hint" id="hint" role="note">
+      <img class="pixelated" src="./assets/noir/nota-atencao.png" alt="" width="84" height="70" />
+      <span>Use <kbd>←</kbd> <kbd>→</kbd> ou deslize</span>
+    </div>
+
+    <nav class="hud" aria-label="Navegação da apresentação">
+      <button class="hud__btn" type="button" data-prev aria-label="Slide anterior">←</button>
+      <ol class="dots" id="dots"></ol>
+      <button class="hud__btn" type="button" data-next aria-label="Próximo slide">→</button>
+    </nav>
+
+    <button class="toc-btn" id="toc-btn" type="button" aria-expanded="false" aria-controls="toc" aria-label="Abrir índice">
+      <img class="pixelated" src="./assets/noir/anotacoes.png" alt="" width="126" height="80" />
+    </button>
+    <nav class="toc" id="toc" aria-label="Índice" hidden>
+      <h2>Índice</h2>
+      <ol id="toc-list"></ol>
+    </nav>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
