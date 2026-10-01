@@ -1,0 +1,3695 @@
+/* ==========================================================================
+   Scorpion Bits
+   Paleta tirada da logo (cubo isométrico) + tipografia própria.
+   Nada de CDN: fontes, ícones e arte são servidos daqui.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- fontes --
+   Só o subset "latin" (U+0000–00FF): cobre todos os acentos do português
+   (ã, ç, õ, á...). O subset "latin-ext" (europeu central, vietnamita etc.)
+   foi removido — ~100KB que o site nunca precisou. */
+@font-face {
+    font-family: "Grotesk";
+    src: url("../assets/fonts/grotesk-latin.woff2") format("woff2");
+    font-weight: 300 700;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+        U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+        U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: "Body";
+    src: url("../assets/fonts/inter-latin.woff2") format("woff2");
+    font-weight: 100 900;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+        U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+        U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* --------------------------------------------------------------- tokens -- */
+:root {
+    --ink-950: #05090f;
+    --ink-900: #080e16;
+    --ink-850: #0c141f;
+    --ink-800: #111c2a;
+
+    --cyan: #6ad8fe;
+    --blue: #51a8f6;
+    --indigo: #5b6bf5;
+    --violet: #8b5cf6;
+    --amber: #ffc46b;
+    --mint: #7ee2a8;
+
+    --text: #eef5fb;
+    --text-soft: #b4c6d7;
+    --text-dim: #7d94aa;
+    --text-faint: #55697d;
+
+    --hair: rgba(126, 190, 232, 0.14);
+    --hair-lit: rgba(126, 190, 232, 0.34);
+    --grid-line: rgba(106, 216, 254, 0.055);
+
+    --font-display: "Grotesk", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Body", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", Consolas,
+        monospace;
+
+    --s--1: clamp(0.74rem, 0.71rem + 0.13vw, 0.81rem);
+    --s-0: clamp(0.94rem, 0.9rem + 0.18vw, 1.02rem);
+    --s-1: clamp(1.06rem, 1rem + 0.3vw, 1.22rem);
+    --s-2: clamp(1.3rem, 1.15rem + 0.7vw, 1.75rem);
+    --s-3: clamp(1.75rem, 1.4rem + 1.7vw, 2.9rem);
+    --s-4: clamp(2.4rem, 1.6rem + 3.9vw, 5.2rem);
+
+    --gutter: clamp(1.1rem, 4vw, 2.25rem);
+    --bay: clamp(4.5rem, 10vh + 2rem, 8.5rem);
+
+    --r-sm: 10px;
+    --r: 14px;
+    --r-lg: 26px;
+    --r-pill: 999px;
+
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+    --dock-h: 58px;
+}
+
+/* ---------------------------------------------------------------- reset -- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--dock-h) + 40px);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+    background: var(--ink-950);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: var(--s-0);
+    line-height: 1.62;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+img,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+img {
+    height: auto;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+ul,
+ol {
+    list-style: none;
+    padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+}
+
+p {
+    text-wrap: pretty;
+}
+
+:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+::selection {
+    background: var(--cyan);
+    color: var(--ink-950);
+}
+
+.skip-link {
+    position: fixed;
+    left: 50%;
+    top: 10px;
+    z-index: 300;
+    translate: -50% -250%;
+    padding: 10px 18px;
+    border-radius: var(--r-pill);
+    background: var(--cyan);
+    color: var(--ink-950);
+    font-weight: 650;
+    transition: translate 0.2s var(--ease);
+}
+
+.skip-link:focus-visible {
+    translate: -50% 0;
+}
+
+/* ---------------------------------------------------------------- fundo -- */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none;
+    background: var(--ink-950);
+}
+
+/* A malha vive numa camada própria, maior que a tela, que desliza no eixo
+   da própria grade isométrica. Animar `background-position` repintaria a
+   viewport inteira a cada quadro; `transform` numa camada já pintada é
+   trabalho de compositor e não custa praticamente nada. */
+/* As malhas são estáticas: só o parallax de rolagem as move.
+   Sem animação de loop, sem `filter` e sem excesso de área — os três
+   juntos é que faziam o navegador rasterizar a camada num bitmap enorme
+   e reduzir a escala dele, dando aquele aspecto de imagem escalonada.
+   A altura extra é só o que o parallax percorre; largura extra não existe
+   porque nada se move na horizontal. */
+.backdrop-grid {
+    position: absolute;
+    inset: 0 0 -620px 0;
+    /* O `.backdrop` é `position: fixed`: estas camadas NÃO acompanham a
+       rolagem sozinhas, o `translate` daqui é todo o movimento delas.
+       Por isso `--par` tem que ser negativo — é o que faz a camada subir
+       junto com o conteúdo. Positivo manda ela para o lado contrário do
+       scroll, que lê na hora como defeito.
+
+       Esta é a malha DE TRÁS: losango pequeno, traço mais apagado e
+       módulo de `--par` menor. Numa perspectiva, uma grade de tamanho
+       real fixo aparece MENOR quanto mais longe está — então losango
+       pequeno tem que ser o fundo, e o fundo se desloca menos. */
+    --par: -0.018;
+    /* --cell: lado do losango; --line-w: espessura do traço */
+    --cell: 78px;
+    --line-w: 1px;
+    translate: 0 calc(var(--sy, 0px) * var(--par));
+    background-image: repeating-linear-gradient(
+            30deg,
+            transparent 0 calc(var(--cell) - var(--line-w)),
+            var(--grid-line) calc(var(--cell) - var(--line-w)) var(--cell)
+        ),
+        repeating-linear-gradient(
+            -30deg,
+            transparent 0 calc(var(--cell) - var(--line-w)),
+            var(--grid-line) calc(var(--cell) - var(--line-w)) var(--cell)
+        );
+    will-change: transform;
+}
+
+/* Malha DA FRENTE: losango maior, traço mais aceso e o maior deslocamento
+   das duas. A profundidade vem da diferença de escala e da velocidade —
+   não de blur. Qualquer `filter` aqui obrigaria a rasterizar a camada e
+   devolveria o serrilhado; linha fina e nítida lê melhor que borrada.
+
+   O nome da classe já foi `--far`, com os papéis trocados: eu tinha posto
+   o losango grande no fundo. É ao contrário — perto de uma grade, os
+   losangos ficam grandes; longe, apertam. Grande = perto = anda mais.
+
+   Este `--par` também já esteve positivo, na tentativa de "andar mais
+   devagar que a página". Estava errado: com o `.backdrop` fixo não existe
+   movimento de página para descontar, então positivo simplesmente empurra
+   a camada contra o scroll.
+
+   O preço de velocidades diferentes: as duas deixam de ficar travadas em
+   registro. Antes compartilhavam a mesma justamente para os vértices da
+   malha fina (78px) nunca saírem de dentro dos da grossa (156px, o dobro
+   exato). Agora deslizam uma sobre a outra durante a rolagem — que é o
+   efeito pedido, mas alinhadas mesmo só no topo da página. */
+.backdrop-grid--perto {
+    inset: 0 0 -620px 0;
+    --par: -0.05;
+    --cell: 156px;
+    --line-w: 1px;
+    --grid-line: rgba(106, 216, 254, 0.085);
+}
+
+/* névoa: manchas grandes que derivam devagar. Só transform anima. */
+.backdrop::before {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    background: radial-gradient(
+            circle at 28% 22%,
+            rgba(81, 168, 246, 0.22),
+            transparent 40%
+        ),
+        radial-gradient(
+            circle at 72% 12%,
+            rgba(106, 216, 254, 0.13),
+            transparent 38%
+        ),
+        radial-gradient(
+            circle at 60% 82%,
+            rgba(91, 107, 245, 0.16),
+            transparent 42%
+        ),
+        radial-gradient(
+            circle at 12% 72%,
+            rgba(139, 92, 246, 0.1),
+            transparent 40%
+        );
+    animation: drift-mist 32s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+@keyframes drift-mist {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    }
+
+    100% {
+        transform: translate3d(3%, -3%, 0) scale(1.12) rotate(6deg);
+    }
+}
+
+.backdrop-mist {
+    position: absolute;
+    inset: -32%;
+    --par: -0.03;
+    translate: 0 calc(var(--sy, 0px) * var(--par));
+    background: radial-gradient(
+            circle at 22% 68%,
+            rgba(106, 216, 254, 0.14),
+            transparent 42%
+        ),
+        radial-gradient(
+            circle at 80% 40%,
+            rgba(139, 92, 246, 0.12),
+            transparent 44%
+        );
+    animation: drift-mist-b 44s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+@keyframes drift-mist-b {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1.06) rotate(0deg);
+    }
+
+    100% {
+        transform: translate3d(-4%, 4%, 0) scale(1) rotate(-8deg);
+    }
+}
+
+
+/* Campo de estrelas: dois planos com tamanhos e velocidades diferentes,
+   dando paralaxe. Cada plano é UMA camada com vários radial-gradients —
+   pintada uma vez, depois só `transform` anima. */
+.backdrop-stars {
+    position: absolute;
+    inset: 0 -6% -780px -6%;
+    --par: -0.08;
+    translate: 0 calc(var(--sy, 0px) * var(--par));
+    background-image: radial-gradient(1.6px 1.6px at 45.2% 56.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 92.4% 46.6%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 50.8% 58.7%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 18.5% 51.2%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 63.0% 79.3%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 9.4% 30.3%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 9.1% 81.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 69.3% 4.2%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 98.2% 96.5%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 65.4% 61.6%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 15.7% 1.5%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 52.8% 6.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 19.0% 24.2%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 3.0% 46.4%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 44.1% 84.2%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 51.9% 64.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 50.0% 66.2%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 45.7% 27.8%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 99.8% 99.6%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 84.0% 70.8%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 31.5% 23.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 28.9% 7.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 76.6% 40.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 84.7% 38.7%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 95.8% 84.7%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 0.1% 21.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 91.0% 47.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 98.0% 39.7%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 7.3% 62.9%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 77.9% 27.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 8.7% 33.3%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 96.4% 75.8%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 11.8% 24.6%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 10.1% 6.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 79.7% 17.8%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 55.9% 44.7%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 19.1% 73.2%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 13.1% 64.4%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 11.7% 42.1%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 21.3% 27.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 97.1% 80.3%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 30.4% 88.5%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 21.1% 39.4%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 85.4% 64.2%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 10.0% 98.9%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 21.3% 25.8%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 77.3% 32.9%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 29.6% 7.3%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 9.0% 58.3%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 24.3% 60.1%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 37.2% 45.3%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 95.9% 48.4%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 57.5% 86.7%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 18.3% 15.4%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 90.8% 81.8%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 24.9% 19.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 73.9% 94.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 19.7% 95.0%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 88.2% 60.4%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 42.1% 10.4%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 3.9% 96.3%, rgba(160, 226, 255, 0.55), transparent 100%),
+            radial-gradient(1.6px 1.6px at 23.8% 70.5%, rgba(160, 226, 255, 0.55), transparent 100%);
+    background-repeat: no-repeat;
+    animation: star-drift-a 120s linear infinite;
+    will-change: transform;
+}
+
+.backdrop-stars--far {
+    inset: 0 -6% -460px -6%;
+    --par: -0.04;
+    background-image: radial-gradient(1px 1px at 54.8% 34.6%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 84.5% 28.9%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 51.0% 34.4%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 41.5% 97.4%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 10.4% 44.5%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 22.5% 35.0%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 99.9% 32.9%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 60.8% 42.0%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 73.0% 44.7%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 17.0% 43.4%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 40.8% 79.3%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 56.3% 19.6%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 67.4% 29.8%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 51.2% 22.0%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 41.1% 78.6%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 51.6% 75.2%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 75.7% 58.7%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 64.5% 39.7%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 61.8% 77.7%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 9.9% 93.8%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 36.7% 13.9%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 15.0% 34.1%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 6.9% 39.8%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 41.5% 65.5%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 46.7% 93.5%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 65.9% 32.1%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 87.5% 69.9%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 96.7% 73.4%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 96.6% 20.5%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 27.8% 97.2%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 2.2% 92.4%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 91.0% 13.6%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 15.1% 91.6%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 96.0% 87.0%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 72.5% 76.0%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 30.8% 0.7%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 62.8% 88.2%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 94.9% 51.5%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 0.8% 17.4%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 44.9% 23.1%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 2.8% 19.3%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 50.0% 12.7%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 11.3% 16.5%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 3.4% 78.4%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 86.6% 20.2%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 63.4% 87.6%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 24.4% 33.3%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 88.1% 76.2%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 62.1% 79.4%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 57.3% 31.5%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 68.5% 78.4%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 5.5% 32.2%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 29.4% 88.6%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 28.8% 67.4%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 43.5% 37.8%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 50.0% 89.5%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 65.8% 38.9%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 15.0% 34.4%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 47.1% 64.6%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 99.9% 32.5%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 94.0% 91.1%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 44.3% 22.2%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 23.4% 92.1%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 17.4% 64.8%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 65.2% 16.7%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 3.1% 63.8%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 5.3% 54.9%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 97.1% 46.4%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 31.2% 10.6%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 30.2% 32.0%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 11.7% 70.2%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 60.2% 71.8%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 10.7% 25.0%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 92.5% 0.9%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 37.0% 81.8%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 22.9% 22.0%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 63.7% 25.2%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 33.6% 39.2%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 29.9% 65.9%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 73.5% 76.1%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 98.0% 7.3%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 25.7% 98.7%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 79.8% 76.0%, rgba(160, 226, 255, 0.32), transparent 100%),
+            radial-gradient(1px 1px at 22.2% 12.8%, rgba(160, 226, 255, 0.32), transparent 100%);
+    animation: star-drift-b 190s linear infinite;
+}
+
+@keyframes star-drift-a {
+    to {
+        transform: translate3d(-4%, 3%, 0);
+    }
+}
+
+@keyframes star-drift-b {
+    to {
+        transform: translate3d(3%, -2.5%, 0);
+    }
+}
+
+/* constelações espalhadas pelo fundo.
+   Sem opacity no container: ela multiplicaria com a de cada constelação
+   (0.16 x 0.34 = 0.05) e sumiria tudo. Cada uma controla a sua. */
+.backdrop-cubes {
+    position: absolute;
+    inset: 0 0 -980px 0;
+    color: var(--cyan);
+    --par: -0.11;
+    translate: 0 calc(var(--sy, 0px) * var(--par));
+}
+
+.backdrop-cubes svg {
+    position: absolute;
+    width: var(--s, 46px);
+    animation: cube-float var(--d, 26s) ease-in-out infinite alternate;
+}
+
+@keyframes cube-float {
+    to {
+        transform: translate3d(14px, -26px, 0) rotate(14deg);
+    }
+}
+
+/* apaga a malha nas bordas para o texto respirar */
+.backdrop::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* Suavizada: antes chegava a 100% opaco na borda e apagava por
+       completo as constelações, que ficam justamente nos cantos.
+       Ainda escurece o suficiente para o texto respirar. */
+    background: radial-gradient(
+        ellipse 92% 78% at 50% 42%,
+        transparent 0%,
+        rgba(5, 9, 15, 0.3) 62%,
+        rgba(5, 9, 15, 0.72) 100%
+    );
+}
+
+.grain {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    z-index: 200;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    background: linear-gradient(90deg, var(--cyan), var(--blue), var(--violet));
+    pointer-events: none;
+}
+
+@supports (animation-timeline: scroll()) {
+    .scroll-progress {
+        animation: fill linear;
+        animation-timeline: scroll(root block);
+    }
+
+    @keyframes fill {
+        to {
+            transform: scaleX(1);
+        }
+    }
+}
+
+/* --------------------------------------------------------------- layout -- */
+.wrap {
+    width: min(1180px, 100% - var(--gutter) * 2);
+    margin-inline: auto;
+}
+
+.bay {
+    padding-block: var(--bay);
+    position: relative;
+}
+
+/* ------------------------------------------------------------ tipografia -- */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--font-mono);
+    font-size: var(--s--1);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+}
+
+.tag::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    rotate: 45deg;
+    background: currentColor;
+    box-shadow: 0 0 10px currentColor;
+}
+
+.sec-head {
+    margin-bottom: clamp(2.25rem, 5vw, 3.5rem);
+}
+
+.sec-index {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--s--1);
+    letter-spacing: 0.24em;
+    color: var(--text-faint);
+    margin-bottom: 18px;
+}
+
+.sec-title {
+    font-size: var(--s-3);
+    margin-bottom: 16px;
+}
+
+.sec-lead {
+    font-size: var(--s-1);
+    color: var(--text-soft);
+    max-width: 56ch;
+}
+
+/* ----------------------------------------------------------------- dock -- */
+/* Nav flutuante, descolada da borda — referência 2. */
+.dock {
+    position: sticky;
+    top: 14px;
+    z-index: 150;
+    margin-block: 14px 0;
+    padding-inline: var(--gutter);
+}
+
+.dock-inner {
+    width: min(1180px, 100%);
+    margin-inline: auto;
+    height: var(--dock-h);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px 0 16px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--hair);
+    background: rgba(8, 14, 22, 0.68);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.9);
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.dock.is-stuck .dock-inner {
+    border-color: var(--hair-lit);
+    background: rgba(8, 14, 22, 0.9);
+}
+
+.dock-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: auto;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -0.03em;
+}
+
+.dock-brand img {
+    width: 25px;
+    transition: transform 0.4s var(--ease);
+}
+
+.dock-brand:hover img {
+    transform: rotate(-12deg) scale(1.08);
+}
+
+.dock-brand em {
+    font-style: normal;
+    color: var(--cyan);
+}
+
+/* fileira do meio da pílula: nav + redes + CTA numa linha só.
+   Sem isso o navegador empilha os filhos como blocos e eles vazam
+   pra fora da pílula no desktop — só a media query mobile cobria. */
+.dock-panel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dock-nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.dock-link {
+    position: relative;
+    padding: 8px 13px;
+    border-radius: var(--r-pill);
+    font-size: 0.89rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: color 0.2s;
+}
+
+.dock-link:hover {
+    color: var(--text);
+}
+
+/* O menu ganhou um quinto item. Entre a largura em que ele vira hambúrguer
+   (860px) e ~1000px, o botão de contato passou a sair 26px para fora do
+   dock. Apertar o padding dos cinco links devolve 50px, que é folga de
+   sobra — e fica aqui, logo abaixo da regra base, porque uma media query
+   de mesma especificidade só vence se vier depois dela no arquivo. */
+@media (min-width: 861px) and (max-width: 1000px) {
+    .dock-link {
+        padding-inline: 8px;
+        font-size: 0.85rem;
+    }
+}
+
+.dock-link.is-active {
+    color: var(--text);
+}
+
+/* pílula que desliza para o item ativo */
+.dock-link.is-active::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: rgba(106, 216, 254, 0.12);
+    border: 1px solid rgba(106, 216, 254, 0.2);
+}
+
+.dock-social {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    margin-left: 6px;
+    padding-left: 9px;
+    border-left: 1px solid var(--hair);
+}
+
+.icon-btn {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: var(--text-faint);
+    transition: color 0.2s, background-color 0.2s, transform 0.25s var(--ease);
+}
+
+.icon-btn:hover {
+    color: var(--cyan);
+    background: rgba(106, 216, 254, 0.1);
+    transform: translateY(-2px);
+}
+
+.icon-btn[data-brand="instagram"]:hover {
+    color: #e1306c;
+    background: rgba(225, 48, 108, 0.12);
+}
+
+.icon-btn[data-brand="linkedin"]:hover {
+    color: #4aa3df;
+    background: rgba(74, 163, 223, 0.12);
+}
+
+.icon-btn[data-brand="itch"]:hover {
+    color: #fa5c5c;
+    background: rgba(250, 92, 92, 0.12);
+}
+
+.dock-toggle {
+    display: none;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid var(--hair);
+    color: var(--text);
+}
+
+/* --------------------------------------------------------------- botões -- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 12px 22px;
+    border-radius: var(--r-pill);
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    transition: transform 0.25s var(--ease), background-color 0.25s,
+        border-color 0.25s, color 0.25s, box-shadow 0.3s;
+}
+
+/* O `:hover` não levanta nem deforma mais o botão: quem responde ao
+   cursor agora é o filtro líquido, e somar um squash-and-stretch por cima
+   dava dois movimentos disputando a mesma leitura. */
+
+/* -- botão líquido: a pílula e as gotas que se fundem --------------------
+   A camada é injetada pelo JS só no desktop (ver "botões líquidos" em
+   main.js), e é ela que passa a desenhar o fundo do botão — por isso o
+   botão em si fica transparente quando ganha a camada.
+
+   Dentro dela: a pílula e um punhado de gotas. Tudo passa junto pelo
+   filtro `#goo` — borrado e com o alfa recontrastado, o que se toca se
+   funde por uma ponte curva. O texto fica FORA de propósito: passar
+   tipografia por esse filtro a engorda e derrete.
+
+   O centro de cada gota fica EM CIMA da borda da pílula, nunca solto no
+   ar. Metade dela sempre cobre a pílula, então a fusão é garantida — uma
+   bola perseguindo o cursor livremente descolava perto dos cantos e
+   aparecia como um objeto estranho pousado ao lado do botão.
+
+   A força vem por proximidade, não por `:hover`: no hover o botão saltava
+   de reto para líquido no instante em que o cursor cruzava a borda. */
+.btn-goo {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    filter: url("#goo");
+    --gota: 30px;
+}
+
+/* `overflow: hidden` AQUI, e não no botão: é isso que segura o gradiente
+   ambiente que gira lá dentro. Recorte de overflow acontece no espaço do
+   ancestral, depois do transform — `clip-path` no próprio elemento gira
+   junto com ele e deixa a mancha escapar em diagonal. */
+.btn-goo__pilula {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: var(--r-pill);
+    background: linear-gradient(120deg, var(--cyan), var(--blue) 55%, var(--indigo));
+}
+
+.btn-goo__brilho {
+    position: absolute;
+    inset: -90%;
+    background: radial-gradient(circle at 30% 32%, var(--violet), transparent 42%),
+        radial-gradient(circle at 72% 60%, var(--cyan), transparent 44%),
+        radial-gradient(circle at 46% 86%, #2f7fd4, transparent 46%),
+        radial-gradient(circle at 88% 16%, #a5f0ff, transparent 38%);
+    filter: blur(11px);
+    animation: liquid 7s ease-in-out infinite;
+    will-change: transform;
+}
+
+/* O gradiente de base repintado num anel colado na borda, por cima do
+   ambiente. A gota só sabe calcular a cor do gradiente de base; se o
+   ambiente girasse até a borda, a emenda mudaria de tom sozinha conforme
+   a mancha passasse. Assim a borda é sempre a mesma cor que a gota, e o
+   ambiente continua vivo no miolo, que é onde ele aparece.
+
+   É um elemento e não um `::after` porque a tinta precisa vir DEPOIS
+   dele: pseudo-elemento é sempre o último da caixa e cobriria a tinta
+   justo na borda, que é onde ela mais importa. */
+.btn-goo__anel {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, var(--cyan), var(--blue) 55%, var(--indigo));
+    mask-image: radial-gradient(closest-side ellipse at 50% 50%,
+        transparent 52%, #000 96%);
+}
+
+/* -- a tinta que escorre onde o cursor passa -----------------------------
+   Quatro manchas moles — verde-azulado, roxo, azul e um miolo branco —
+   perseguindo o cursor com atrasos diferentes. É o atraso desigual que
+   faz a mistura escorrer atrás do ponteiro em vez de andar colada nele.
+
+   Tamanho, cor e queda de alfa de cada mancha são escritos pelo JS a
+   partir de uma tabela só (ver "botões líquidos" em main.js), porque a
+   MESMA conta decide a cor de cada gota da borda. Sem isso a gota que
+   incha embaixo do cursor ficaria com a cor do gradiente base enquanto a
+   pílula ao lado dela estaria coberta de tinta, e a emenda apareceria
+   justo no ponto mais visível do efeito.
+
+   Sem `filter: blur`: a queda suave já vem do próprio radial-gradient, e
+   um blur tornaria a cor da tinta impossível de reproduzir no JS. */
+.btn-goo__tinta {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+}
+
+.btn-goo__mancha {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    will-change: transform;
+}
+
+/* a cor de cada gota é calculada no JS pelo ponto do gradiente em que ela
+   está, senão a emenda com a pílula aparece nas pontas ciano e índigo */
+.btn-goo__gota {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--gota);
+    height: var(--gota);
+    margin: calc(var(--gota) / -2) 0 0 calc(var(--gota) / -2);
+    border-radius: 50%;
+    background: var(--blue);
+    transform: scale(0);
+    will-change: transform;
+}
+
+/* o fundo sai do botão e passa para a camada; e as gotas precisam poder
+   escapar da caixa, senão não existe expansão nenhuma */
+.btn--solid:has(.btn-goo) {
+    background: transparent;
+    overflow: visible;
+}
+
+/* o gradiente ambiente mudou de casa: agora ele mora dentro da pílula da
+   camada líquida, que o recorta. Aqui fora ele ficaria por cima. */
+.btn--solid:has(.btn-goo)::before {
+    display: none;
+}
+
+.btn .icon {
+    flex: none;
+    transition: transform 0.28s var(--ease);
+}
+
+.btn--solid {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(120deg, var(--cyan), var(--blue) 55%, var(--indigo));
+    color: #03101c;
+    box-shadow: 0 10px 30px -12px rgba(81, 168, 246, 0.9);
+}
+
+/* Gradiente "líquido": manchas de cor que se deformam dentro do botão.
+   `filter: blur` é aplicado UMA vez na rasterização da camada; depois só
+   `transform` anima, então o custo por quadro é de compositor. O caminho
+   caro seria filtro SVG (feTurbulence + feDisplacementMap), que recalcula
+   pixel a pixel a cada quadro e derruba o mobile — por isso não uso.
+   z-index -1 pinta acima do fundo do botão e abaixo do texto. */
+.btn--solid::before {
+    content: "";
+    position: absolute;
+    inset: -90%;
+    z-index: -1;
+    background: radial-gradient(
+            circle at 30% 32%,
+            var(--violet),
+            transparent 42%
+        ),
+        radial-gradient(circle at 72% 60%, var(--cyan), transparent 44%),
+        radial-gradient(circle at 46% 86%, #2f7fd4, transparent 46%),
+        radial-gradient(circle at 88% 16%, #a5f0ff, transparent 38%);
+    filter: blur(11px);
+    animation: liquid 7s ease-in-out infinite;
+    will-change: transform;
+}
+
+/* escalas desiguais nos eixos = a mancha "escorre" em vez de só girar */
+@keyframes liquid {
+    0% {
+        transform: rotate(0deg) scale(1.05, 1);
+    }
+
+    25% {
+        transform: rotate(90deg) scale(1.25, 0.92);
+    }
+
+    50% {
+        transform: rotate(180deg) scale(0.95, 1.22);
+    }
+
+    75% {
+        transform: rotate(270deg) scale(1.18, 1.02);
+    }
+
+    100% {
+        transform: rotate(360deg) scale(1.05, 1);
+    }
+}
+
+.btn--solid:hover .icon {
+    transform: translateX(3px);
+}
+
+.btn--wire {
+    border-color: var(--hair-lit);
+    color: var(--text);
+    background: rgba(106, 216, 254, 0.04);
+}
+
+.btn--wire:hover {
+    background: rgba(106, 216, 254, 0.11);
+    border-color: var(--cyan);
+}
+
+.btn--sm {
+    padding: 8px 16px;
+    font-size: 0.84rem;
+}
+
+.btn--lg {
+    padding: 15px 28px;
+    font-size: 1rem;
+}
+
+.link-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--cyan);
+}
+
+.link-arrow .icon {
+    transition: transform 0.28s var(--ease);
+}
+
+.link-arrow:hover .icon {
+    transform: translateX(4px);
+}
+
+/* ----------------------------------------------------------------- hero -- */
+/* Tipografia gigante em três camadas com o mascote no meio: a linha do
+   meio fica atrás (vazada), a de baixo na frente. É o que dá profundidade
+   real em vez de "imagem ao lado do texto". */
+/* O rodapé do hero (21 / role / stack) fica ancorado embaixo, e só o bloco
+   principal se centraliza no espaço restante. Antes tudo entrava no mesmo
+   centro, então o conjunto subia e sobrava vazio no pé da tela. */
+.hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: calc(100svh - var(--dock-h) - 14px);
+    padding-block: clamp(1rem, 3.5vh, 2.25rem);
+    text-align: center;
+    /* 24vh e não 27vh: com o texto passando por trás, cada ponto a mais de
+       mascote come uma letra a mais de "Scorpion" e de "Ideias que". A
+       sobreposição é para ser um detalhe, não um apagador. */
+    --orb-w: clamp(150px, min(26vw, 24vh), 320px);
+}
+
+.hero-mid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    min-height: 0;
+    /* os botões ficam abaixo do palco e puxam o centro óptico para cima;
+       este respiro devolve a órbita para o meio da tela */
+    padding-top: clamp(0.75rem, 3.5vh, 2.75rem);
+}
+
+.hero-base {
+    flex: none;
+}
+
+/* -- o bloco tipográfico --------------------------------------------------- */
+/* Sem z-index/transform/opacity aqui: qualquer um deles criaria contexto
+   de empilhamento e prenderia as linhas atrás do mascote. */
+.hero-type {
+    position: relative;
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 9vw, 7.6rem);
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+    margin: 0;
+    width: 100%;
+}
+
+.hero-type > span {
+    display: block;
+    position: relative;
+    /* a máquina de escrever esvazia as linhas: sem piso de altura a caixa
+       colapsaria para 0 e o herói inteiro pularia a cada ciclo */
+    min-height: 0.92em;
+}
+
+/* o texto real, para leitor de tela e para o buscador: as duas linhas
+   visíveis são aria-hidden porque o conteúdo delas muda o tempo todo */
+.hero-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Cursor de terminal. Fica dentro de um invólucro inline que abraça só o
+   texto, então acompanha a última letra sem precisar de medição em JS.
+
+   É `inline-block` alinhado pela linha de base, e não `absolute`: a caixa
+   de um inline vazio colapsa para altura 0 e sobe 23px em relação à cheia,
+   então um cursor posicionado contra ela pularia toda vez que a linha
+   esvaziasse. Preso à linha de base, ele fica parado.
+
+   Em troca ele ocupa ~0.165em de largura na linha — o que a cópia do
+   brilho da linha alinhada à direita compensa com padding. */
+.hero-ln::after {
+    content: "";
+    display: inline-block;
+    width: 0.075em;
+    height: 0.72em;
+    margin-left: 0.09em;
+    vertical-align: -0.045em;
+    background: var(--cyan);
+    box-shadow: 0 0 18px rgba(106, 216, 254, 0.65);
+    opacity: 0;
+}
+
+.hero-ln.is-caret::after {
+    opacity: 1;
+    animation: caret-blink 1.06s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* -- as duas linhas, centradas --------------------------------------------
+   Já foram alinhadas às bordas (uma à esquerda, outra à direita), que é o
+   arranjo em diagonal. Ele só funciona quando as duas linhas têm larguras
+   parecidas: com "Scorpion" (499px) contra "Bits." (259px), as pontas de
+   fora paravam em lugares completamente diferentes e a página ficava
+   pesada de um lado só. Ancorar pelo lado de dentro não resolve — aí os
+   extremos externos é que ficam tortos.
+
+   Não dá para ter simetria nos dois: ou as âncoras internas coincidem, ou
+   as pontas externas coincidem. É a ponta externa que o olho lê como
+   equilíbrio, então as duas linhas ficam centradas, e qualquer par de
+   palavras sai simétrico sozinho.
+
+   As duas passam ATRÁS do mascote (z-index 1). Na frente, o texto tapava
+   o escorpião inteiro e ele virava plano de fundo do próprio site. Atrás,
+   ele morde só um pedaço de cada linha, que é o encaixe que dá graça à
+   composição.
+
+   Para isso funcionar as linhas precisam de FOLGA: quanto mais separadas,
+   menos cada uma cruza o corpo do escorpião — a de cima passa na altura
+   dos cubos, a de baixo na das patas, e o cubo com os olhos fica livre no
+   meio. Por isso o afastamento aqui é bem maior que o padrão de um título
+   de duas linhas.
+
+   A sombra existe para as letras não sumirem quando cruzam a arte. */
+.hero-l1,
+.hero-l3 {
+    z-index: 1;
+    text-align: center;
+    text-shadow: 0 6px 34px rgba(5, 9, 15, 0.55);
+}
+
+/* A folga precisa ceder à ALTURA, não só à largura: em 1366x768 uma folga
+   presa em 13vw dava 178px e empurrava o rodapé do herói 69px abaixo da
+   dobra. O `min` com vh é quem segura isso — mesma lógica do --orb-w. */
+.hero-l3 {
+    margin-top: clamp(3.5rem, min(13vw, 15vh), 13rem);
+}
+
+.hero-l1 em,
+.hero-l3 em {
+    font-style: normal;
+    color: var(--cyan);
+}
+
+/* -- brilho líquido sob o ponteiro ----------------------------------------
+   Uma cópia do texto por cima, pintada com o gradiente da marca, revelada
+   só dentro de uma bolha que segue o mouse. A bolha é uma elipse cujos dois
+   raios oscilam fora de fase: é isso que dá a leitura de gota, não de disco.
+   O JS escreve --gx/--gy (posição, com atraso proposital) e --gw/--gh.
+
+   Sem `text-shadow` nem `filter`: qualquer halo é pintado a partir do
+   contorno do glifo e escapa para FORA das letras, o que descaracteriza o
+   efeito — o certo é a cor viver só dentro do desenho da fonte. Recorte
+   puro, sem brilho externo.
+
+   `background-size` menor que a linha é o que salva a cor: com o gradiente
+   esticado na largura toda, uma bolha de ~180px enxergava uma fatia
+   estreitíssima dele e saía uma cor chapada, lavada. Ladrilhado a 300px,
+   a bolha sempre contém a rampa inteira. A rampa é simétrica
+   (ciano → violeta → ciano) para a emenda do ladrilho não aparecer.
+
+   Só no desktop: em toque não existe ponteiro para seguir. */
+@media (hover: hover) and (pointer: fine) {
+    .hero-l1::after,
+    .hero-l3::after {
+        content: attr(data-text);
+        position: absolute;
+        /* Só o fundo é esticado, e de propósito. A caixa do bloco tem a
+           altura da entrelinha (0.92em), mas o texto desce 21px abaixo
+           dela — e é essa faixa que continha as descidas de j, g, q, p
+           cortadas pela máscara. Esticar por baixo põe as descidas dentro
+           da caixa; esticar por cima moveria o texto, porque a linha
+           começa no topo da caixa de conteúdo. */
+        inset: 0 0 -0.34em 0;
+        pointer-events: none;
+        background-image: linear-gradient(96deg,
+                var(--cyan) 0%,
+                var(--blue) 22%,
+                var(--indigo) 40%,
+                var(--violet) 52%,
+                var(--indigo) 64%,
+                var(--blue) 80%,
+                var(--cyan) 100%);
+        background-size: 300px 100%;
+        background-repeat: repeat;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        text-shadow: none;
+        /* núcleo sólido até 52%: a queda suave demais deixava a cor
+           semitransparente sobre o branco e devolvia o tom pastel */
+        -webkit-mask-image: radial-gradient(ellipse var(--gw, 0px) var(--gh, 0px) at var(--gx, -400px) var(--gy, -400px),
+                #000 0%,
+                #000 52%,
+                rgba(0, 0, 0, 0.5) 76%,
+                transparent 100%);
+        mask-image: radial-gradient(ellipse var(--gw, 0px) var(--gh, 0px) at var(--gx, -400px) var(--gy, -400px),
+                #000 0%,
+                #000 52%,
+                rgba(0, 0, 0, 0.5) 76%,
+                transparent 100%);
+        /* `mask-clip` nasce em `border-box`, e a caixa do bloco tem a
+           altura da entrelinha (0.92em) — mas o texto transborda 21px por
+           baixo dela. Resultado: a máscara cortava reto na linha de base e
+           as descidas de j, g, q, p ficavam brancas dentro da bolha.
+           `no-clip` solta esse limite. Onde não houver suporte a
+           declaração cai fora sozinha e volta o corte de antes, que é o
+           pior caso aceitável. */
+        -webkit-mask-clip: no-clip;
+        mask-clip: no-clip;
+        opacity: 0;
+        transition: opacity 0.32s ease;
+    }
+
+    /* O cursor ocupa ~0.165em no fim da linha e entra na conta da
+       centralização, então o texto de verdade fica meio cursor à esquerda
+       do centro. A cópia não tem cursor: sem essa folga à direita ela
+       centraria sozinha e apareceria uma franja colorida deslocada.
+       Encolher a caixa dela pela direita move o centro dela na mesma
+       medida. */
+    .hero-l1::after,
+    .hero-l3::after {
+        padding-right: 0.165em;
+    }
+
+    .hero-type.is-glow .hero-l1::after,
+    .hero-type.is-glow .hero-l3::after {
+        opacity: 1;
+    }
+}
+
+/* -- o mascote, entre as camadas de texto ----------------------------------
+   O palco existe só para dar referência de posição: o mascote precisa se
+   alinhar à linha do meio do texto, não ao centro da seção inteira.
+   Sem z-index/transform aqui — criaria contexto de empilhamento e o texto
+   não conseguiria mais passar na frente. */
+.hero-stage {
+    position: relative;
+    width: 100%;
+    /* reserva a altura da órbita: sendo absoluta, ela não entrava na conta
+       do layout e ficava colada no dock, com sobra morta embaixo */
+    min-height: calc(var(--orb-w) * 2.16);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero-orb {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    width: var(--orb-w);
+    aspect-ratio: 442 / 588;
+    transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+}
+
+.hero-orb::before {
+    content: "";
+    position: absolute;
+    width: 150%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(106, 216, 254, 0.24),
+        rgba(91, 107, 245, 0.12) 40%,
+        transparent 66%
+    );
+}
+
+/* Sistema orbital: anéis finos, cubos isométricos e faíscas girando em
+   velocidades e sentidos diferentes, no espírito de um diagrama estelar.
+   Cada <g> é uma camada só de `transform: rotate` — trabalho de compositor.
+   Uso SVG porque `stroke-dasharray` dá controle de traço e ponto que
+   `border: dashed` num círculo CSS não dá. */
+.orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 216%;
+    /* o reset tem `svg { max-width: 100% }`, que prendia a órbita ao
+       tamanho do mascote — precisa ser liberado aqui */
+    max-width: none;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    color: var(--cyan);
+    overflow: visible;
+    pointer-events: none;
+}
+
+.orbit-spin {
+    transform-origin: 300px 300px;
+    animation: orbit-turn var(--dur, 90s) linear infinite;
+    will-change: transform;
+}
+
+.orbit-spin--a {
+    --dur: 78s;
+}
+
+.orbit-spin--b {
+    --dur: 52s;
+    animation-direction: reverse;
+}
+
+.orbit-spin--c {
+    --dur: 124s;
+}
+
+.orbit-spin--d {
+    --dur: 96s;
+    animation-direction: reverse;
+}
+
+/* Constelações menores espalhadas fora do centro. Cada uma é um SVG
+   pequeno com anéis concêntricos e cubos orbitando, posicionado em canto
+   assimétrico. Substituem os cubos soltos, que não tinham contexto. */
+.orbit-mini {
+    position: absolute;
+    width: var(--s, 190px);
+    aspect-ratio: 1;
+    max-width: none;
+    color: var(--cyan);
+    opacity: var(--o, 0.4);
+    overflow: visible;
+}
+
+.orbit-mini .orbit-spin {
+    transform-origin: 100px 100px;
+    /* sem will-change: em SVG ele congela o traço num raster e o vetor
+       fino aparece serrilhado, como imagem ampliada */
+    will-change: auto;
+}
+
+.orbit-mini [data-rev] {
+    animation-direction: reverse;
+}
+
+@keyframes orbit-turn {
+    to {
+        rotate: 360deg;
+    }
+}
+
+/* pulso suave nas faíscas, sem deslocamento */
+.orbit-static use {
+    animation: spark-pulse 4.5s ease-in-out infinite;
+}
+
+.orbit-static use:nth-of-type(2) {
+    animation-delay: -1.2s;
+}
+
+.orbit-static use:nth-of-type(3) {
+    animation-delay: -2.4s;
+}
+
+.orbit-static use:nth-of-type(4) {
+    animation-delay: -3.1s;
+}
+
+.orbit-static use:nth-of-type(5) {
+    animation-delay: -0.6s;
+}
+
+@keyframes spark-pulse {
+    50% {
+        opacity: 0.15;
+    }
+}
+
+.hero-mascot {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.65));
+    animation: hover-y 7s ease-in-out infinite;
+}
+
+/* Mascote animado: vídeo WebM com alpha.
+
+   O WebP animado que morava aqui era menor (1,1 MB contra 3,8 MB) e tinha
+   a vantagem de tocar no Safari, mas travava o iPhone: `<img>` animado é
+   decodificado quadro a quadro na thread principal, sem aceleração. Vídeo
+   vai para o decodificador, e onde não der, cai no poster.
+
+   O quadro veio em 1917x1078 com o logo ocupando só 776x988 — 63% é
+   margem transparente. Como a margem é invisível, compenso ampliando o
+   vídeo até o CONTEÚDO bater com --orb-w: 776/1917 = 40,5%, então a
+   largura precisa ser --orb-w / 0,405 = --orb-w * 2,47.
+
+   Centralização por margem calculada, não por grid nem por transform:
+   o vídeo é mais largo que a célula, e item de grid que transborda o
+   Chrome ancora no início em vez de centralizar; `translate(-50%)` resolve
+   a porcentagem contra a própria caixa, que muda quando os metadados
+   chegam. Metade da largura = --orb-w * 1.235; metade da altura = * 0.6945.
+
+   `animation: none` porque a flutuação já vem embutida no vídeo — somar a
+   do CSS daria dois balanços fora de fase. */
+.hero-mascot--anim {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(var(--orb-w) * 2.47);
+    height: auto;
+    max-width: none;
+    margin-left: calc(var(--orb-w) * -1.235);
+    margin-top: calc(var(--orb-w) * -0.6945);
+    animation: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.hero-mascot--anim.is-on {
+    opacity: 1;
+}
+
+/* o poster sai de cena quando o vídeo assume, sem salto de layout */
+.hero-mascot.is-off {
+    opacity: 0;
+}
+
+@keyframes hover-y {
+    50% {
+        transform: translateY(-14px);
+    }
+}
+
+/* -- chamadas ligadas ao mascote por fio fino ------------------------------ */
+.hero-note {
+    position: absolute;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.hero-note i {
+    width: 9px;
+    height: 9px;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid var(--cyan);
+    background: rgba(106, 216, 254, 0.18);
+    box-shadow: 0 0 12px rgba(106, 216, 254, 0.7);
+}
+
+.hero-note::before {
+    content: "";
+    width: clamp(40px, 6vw, 90px);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--hair-lit));
+}
+
+.hero-note--l {
+    top: 70%;
+    right: calc(50% + clamp(190px, 17vw, 250px));
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
+.hero-note--l::before {
+    background: linear-gradient(270deg, transparent, var(--hair-lit));
+}
+
+.hero-note--r {
+    top: 22%;
+    left: calc(50% + clamp(190px, 17vw, 250px));
+}
+
+.hero-note b {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    color: var(--text);
+}
+
+/* -- trilhos laterais ------------------------------------------------------ */
+.hero-rail {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    display: grid;
+    gap: 14px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    color: var(--text-faint);
+}
+
+.hero-rail--l {
+    left: calc(-1 * clamp(20px, 3.4vw, 58px));
+    justify-items: start;
+}
+
+.hero-rail--l a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.25s;
+}
+
+.hero-rail--l a::before {
+    content: "";
+    width: 1px;
+    height: 14px;
+    background: var(--hair);
+    transition: height 0.3s var(--ease), background-color 0.25s;
+}
+
+.hero-rail--l a:hover,
+.hero-rail--l a.is-on {
+    color: var(--cyan);
+}
+
+.hero-rail--l a:hover::before,
+.hero-rail--l a.is-on::before {
+    height: 26px;
+    background: var(--cyan);
+}
+
+.hero-rail--r {
+    right: calc(-1 * clamp(20px, 3.4vw, 58px));
+    justify-items: center;
+    gap: 6px;
+}
+
+/* -- rodapé do hero -------------------------------------------------------- */
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* 12px não davam espaço para a bola do líquido: ela atravessava o vão
+       e aparecia através do botão vazado ao lado, que é quase
+       transparente. O efeito precisa de para onde crescer. */
+    gap: 28px;
+    margin-top: clamp(1.75rem, 4vh, 2.75rem);
+}
+
+.hero-base {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+    margin-top: clamp(2rem, 5vh, 3.25rem);
+    padding-top: 22px;
+    border-top: 1px solid var(--hair);
+    text-align: left;
+}
+
+.hero-stat {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.hero-stat b {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.1rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    background: linear-gradient(150deg, var(--cyan), var(--indigo));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero-stat span {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    line-height: 1.45;
+    text-align: left;
+}
+
+.hero-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: var(--s--1);
+    letter-spacing: 0.14em;
+    color: var(--text-faint);
+}
+
+.hero-cue i {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--hair);
+    color: var(--cyan);
+    animation: nudge 2.4s ease-in-out infinite;
+}
+
+@keyframes nudge {
+    50% {
+        transform: translateY(4px);
+    }
+}
+
+/* agrupa os ícones de tecnologia numa pílula com rótulo */
+.hero-stack {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 7px 20px 7px 7px;
+    border: 1px solid var(--hair);
+    border-radius: var(--r-pill);
+    background: rgba(106, 216, 254, 0.03);
+}
+
+.hero-stack-label {
+    flex: none;
+    padding: 5px 13px;
+    border-radius: var(--r-pill);
+    background: rgba(106, 216, 254, 0.1);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--cyan);
+}
+
+.hero-strip {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.85rem, 2.2vw, 1.4rem);
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: var(--s--1);
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+}
+
+.hero-strip li {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: color 0.25s;
+}
+
+.hero-strip li:hover {
+    color: var(--text-soft);
+}
+
+.hero-strip .icon {
+    color: var(--text-dim);
+    font-size: 1.1em;
+}
+
+/* -- entrada da tipografia ------------------------------------------------- */
+/* Cada linha sobe por trás de uma máscara, uma depois da outra. */
+.js .hero-l1,
+.js .hero-l3 {
+    animation: line-rise 1s var(--ease) both;
+}
+
+.js .hero-l3 {
+    animation-delay: 0.12s;
+}
+
+.js .hero-orb,
+.js .hero-actions,
+.js .hero-base,
+.js .hero-note,
+.js .hero-rail {
+    animation: soft-in 1.1s var(--ease) both;
+}
+
+.js .hero-orb {
+    animation-delay: 0.25s;
+}
+
+.js .hero-actions {
+    animation-delay: 0.4s;
+}
+
+.js .hero-base,
+.js .hero-note,
+.js .hero-rail {
+    animation-delay: 0.55s;
+}
+
+@keyframes line-rise {
+    from {
+        opacity: 0;
+        transform: translateY(0.42em);
+    }
+}
+
+@keyframes soft-in {
+    from {
+        opacity: 0;
+    }
+}
+
+/* --------------------------------------------------------- porquês (03) -- */
+/* Caixas propositalmente fora de linha, ao redor de uma peça central. */
+.why {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 0.75fr) minmax(0, 1fr);
+    gap: clamp(1rem, 2.5vw, 2rem);
+    align-items: center;
+}
+
+.why-col {
+    display: grid;
+    gap: clamp(1rem, 2.5vw, 1.75rem);
+}
+
+.why-col--l {
+    justify-items: end;
+}
+
+/* Topo chanfrado, igual a uma face do cubo da logo.
+   O elemento externo é a borda (1px de padding), o ::before é o
+   preenchimento — assim o corte diagonal também tem contorno, o que
+   um clip-path sozinho não consegue fazer. */
+.why-card {
+    --slope: 24px;
+    position: relative;
+    width: min(330px, 100%);
+    padding: 1px;
+    clip-path: polygon(
+        0 var(--slope),
+        100% 0,
+        100% calc(100% - var(--slope)),
+        0 100%
+    );
+    background: linear-gradient(
+        var(--tilt, 150deg),
+        rgba(126, 190, 232, 0.4),
+        rgba(126, 190, 232, 0.1) 55%
+    );
+    transition: transform 0.45s var(--ease), filter 0.45s var(--ease);
+}
+
+.why-card::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    z-index: 0;
+    clip-path: inherit;
+    background: linear-gradient(
+            var(--tilt, 150deg),
+            rgba(106, 216, 254, 0.12),
+            rgba(8, 14, 22, 0.55) 60%
+        ),
+        #0a121c;
+    transition: background 0.45s var(--ease);
+}
+
+.why-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* folga vertical extra: as duas diagonais comem altura nas pontas */
+.why-card-in {
+    display: block;
+    padding: calc(24px + var(--slope) * 0.7) 26px;
+}
+
+.why-card:hover {
+    transform: translateY(-5px);
+    filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.5));
+}
+
+.why-card:hover::before {
+    background: linear-gradient(
+            var(--tilt, 150deg),
+            rgba(106, 216, 254, 0.2),
+            rgba(8, 14, 22, 0.5) 60%
+        ),
+        #0b1420;
+}
+
+/* as colunas se escalonam entre si; dentro de cada uma tudo fica alinhado */
+.why-col--r {
+    margin-top: clamp(0px, 5vw, 68px);
+}
+
+.why-card.o2,
+.why-card.o4 {
+    --tilt: 210deg;
+}
+
+.why-num {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--cyan);
+    margin-bottom: 10px;
+}
+
+.why-card.o2 .why-num,
+.why-card.o4 .why-num {
+    color: var(--violet);
+}
+
+.why-card h3 {
+    font-size: 1.08rem;
+    margin-bottom: 8px;
+}
+
+.why-card p {
+    font-size: 0.92rem;
+    color: var(--text-dim);
+    line-height: 1.58;
+}
+
+.why-core {
+    position: relative;
+    display: grid;
+    place-items: center;
+}
+
+.why-core::before {
+    content: "";
+    position: absolute;
+    width: 260px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(91, 107, 245, 0.3),
+        transparent 66%
+    );
+}
+
+.why-core img {
+    position: relative;
+    width: min(190px, 80%);
+    filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.6));
+    animation: hover-y 9s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------------- curso -- */
+.course {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: center;
+}
+
+/* A vitrine da turma: uma faixa com o logo do GameLab e a legenda, e as
+   duas fotos empilhadas embaixo.
+
+   O logo ficou FORA das fotos. Sobreposto ele caía justo no canto claro
+   de janela da foto da oficina e sumia — e o outro canto de cima é onde
+   está o site projetado na parede, que é o melhor detalhe da imagem e não
+   pode ser tapado. No fundo escuro do card as cores dele aparecem. */
+.course-figure {
+    --pad: clamp(1.1rem, 3vw, 1.7rem);
+    position: relative;
+    display: grid;
+    gap: 12px;
+    padding: var(--pad);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--hair-lit);
+    background: linear-gradient(
+            145deg,
+            rgba(81, 168, 246, 0.16),
+            transparent 58%
+        ),
+        rgba(12, 20, 31, 0.75);
+    overflow: hidden;
+}
+
+.lab-topo {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.lab-logo {
+    width: clamp(92px, 30%, 140px);
+    height: auto;
+}
+
+.lab-legenda {
+    margin: 0;
+    line-height: 1.5;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+/* 20px e não `--r-lg`: fica um pouco menos redondo que o card em volta,
+   que é o que faz um canto dentro do outro parecer concêntrico */
+.lab-shot {
+    position: relative;
+    margin: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--hair-lit);
+}
+
+.lab-shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* A foto de grupo tem meio quadro de chão vazio embaixo. Recortada em
+   16:9 e ancorada em cima, sobra a fileira de gente — que é o assunto —
+   e a coluna para de ficar alta demais para o texto ao lado. */
+.lab-shot--turma img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: center 26%;
+}
+
+.course-figure::after {
+    content: "";
+    position: absolute;
+    inset: -50% -30% auto auto;
+    width: 320px;
+    aspect-ratio: 1;
+    background: radial-gradient(
+        circle,
+        rgba(106, 216, 254, 0.22),
+        transparent 66%
+    );
+    pointer-events: none;
+}
+
+/* régua de rótulo e valor: sai da vitrine do curso e serve em
+   qualquer lugar que precise de uma lista de fatos curta */
+.regua {
+    position: relative;
+    display: grid;
+    gap: 12px;
+    margin: 0 0 30px;
+    padding-top: 22px;
+    border-top: 1px solid var(--hair);
+    max-width: 54ch;
+}
+
+.regua li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    font-size: 0.9rem;
+    color: var(--text-soft);
+}
+
+.regua b {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-weight: 500;
+}
+
+.course-body p {
+    color: var(--text-soft);
+    margin-bottom: 28px;
+    max-width: 54ch;
+}
+
+/* ----------------------------------------------------------------- time -- */
+/* Cluster de avatares sobrepostos + palco arrastável. */
+.crew {
+    position: relative;
+}
+
+.roster {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    margin: 0 auto clamp(1.75rem, 4vw, 2.5rem);
+    width: fit-content;
+    max-width: 100%;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--hair);
+    background: rgba(12, 20, 31, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.roster-btn {
+    position: relative;
+    width: 54px;
+    height: 54px;
+    flex: none;
+    border-radius: 50%;
+    padding: 2px;
+    background: var(--ink-800);
+    margin-left: -14px;
+    transition: transform 0.45s var(--ease), margin 0.45s var(--ease),
+        box-shadow 0.35s;
+}
+
+.roster-btn:first-child {
+    margin-left: 0;
+}
+
+.roster-btn img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--ink-900);
+    background: var(--ink-800);
+    transition: filter 0.35s, opacity 0.35s;
+    filter: grayscale(1) contrast(0.9);
+    opacity: 0.55;
+}
+
+.roster-btn:hover img {
+    filter: none;
+    opacity: 0.85;
+}
+
+.roster-btn:hover {
+    transform: translateY(-4px);
+    z-index: 3;
+}
+
+.roster-btn.is-on {
+    z-index: 4;
+    margin-left: 4px;
+    margin-right: 4px;
+    transform: translateY(-6px) scale(1.14);
+    background: linear-gradient(140deg, var(--cyan), var(--indigo));
+    box-shadow: 0 10px 26px -8px rgba(106, 216, 254, 0.7);
+}
+
+.roster-btn:first-child.is-on {
+    margin-left: 0;
+}
+
+.roster-btn.is-on img {
+    filter: none;
+    opacity: 1;
+}
+
+.roster-btn::after {
+    content: attr(data-n);
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 18px;
+    height: 18px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--ink-950);
+    background: var(--cyan);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.roster-btn.is-on::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* -- palco ----------------------------------------------------------------- */
+.stage {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--hair);
+    background: linear-gradient(
+            150deg,
+            rgba(106, 216, 254, 0.07),
+            transparent 55%
+        ),
+        rgba(10, 17, 26, 0.68);
+    cursor: grab;
+    touch-action: pan-y;
+}
+
+.stage.is-dragging {
+    cursor: grabbing;
+}
+
+/* nome gigante fantasma no fundo, trocado a cada slide */
+.stage-ghost {
+    position: absolute;
+    left: clamp(-8px, -1vw, 0px);
+    bottom: -0.16em;
+    z-index: 0;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(4.5rem, 15vw, 11rem);
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(126, 190, 232, 0.14);
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+
+.stage-ghost.is-in {
+    opacity: 1;
+    transform: none;
+}
+
+.stage-track {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    transition: transform 0.6s var(--ease-io);
+}
+
+.stage.is-dragging .stage-track {
+    transition: none;
+}
+
+.slide {
+    --pad: clamp(1.75rem, 4vw, 3rem);
+    flex: 0 0 100%;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 3.25rem);
+    padding: var(--pad);
+    user-select: none;
+}
+
+/* -- o retrato recortado --------------------------------------------------
+   Caixa de tamanho FIXO com a foto encostada embaixo, e não a foto solta:
+   os seis recortes têm proporções diferentes (de 0,49 a 0,77 de largura por
+   altura), então uma imagem só com largura definida mudaria de altura a
+   cada integrante e a coluna de texto ao lado pularia junto. Com a caixa
+   fixa e a altura mandando, todas as cabeças saem do mesmo tamanho.
+
+   A largura da caixa é 0,78 da altura porque essa é a proporção do recorte
+   mais largo — abaixo disso ele encostaria nas beiradas.
+
+   A base sangra para dentro do padding do slide: a foto é cortada na
+   cintura, e deixá-la flutuando no ar denunciaria o recorte. Assim quem
+   corta é a borda do card. */
+.slide-retrato {
+    --h: clamp(210px, 32vw, 330px);
+    position: relative;
+    width: calc(var(--h) * 0.78);
+    height: var(--h);
+    align-self: end;
+    margin-bottom: calc(var(--pad) * -1);
+}
+
+/* A foto ocupa a caixa inteira e quem preserva a proporção é o
+   `object-fit`. A tentação era `width: auto; height: 100%`, e ela não
+   funciona: a caixa é um item de grid cuja linha implícita é `auto`, então
+   a altura percentual do filho não tem contra o que resolver e vira
+   `auto` — nem com `!important`. */
+.slide-retrato img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: bottom center;
+    filter: drop-shadow(0 18px 32px rgba(3, 8, 14, 0.55));
+    pointer-events: none;
+}
+
+.slide.is-live .slide-retrato img {
+    animation: retrato-entra 0.7s var(--ease) both;
+}
+
+@keyframes retrato-entra {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.985);
+    }
+}
+
+/* o mesmo halo que ficava atrás do quadrado, agora atrás da pessoa */
+.slide-retrato::after {
+    content: "";
+    position: absolute;
+    inset: 4% -20% 18% -20%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(106, 216, 254, 0.24),
+        transparent 68%
+    );
+    pointer-events: none;
+}
+
+/* -- texto ----------------------------------------------------------------- */
+.slide-body {
+    min-width: 0;
+}
+
+/* entra escalonado quando o slide vira o ativo */
+.slide.is-live .slide-body > * {
+    animation: line-in 0.55s var(--ease) both;
+}
+
+.slide.is-live .slide-body > *:nth-child(2) {
+    animation-delay: 0.06s;
+}
+
+.slide.is-live .slide-body > *:nth-child(3) {
+    animation-delay: 0.12s;
+}
+
+.slide.is-live .slide-body > *:nth-child(4) {
+    animation-delay: 0.18s;
+}
+
+.slide.is-live .slide-body > *:nth-child(5) {
+    animation-delay: 0.24s;
+}
+
+@keyframes line-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+}
+
+.slide-no {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--s--1);
+    letter-spacing: 0.2em;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+}
+
+.slide-no::after {
+    content: "";
+    flex: 1;
+    max-width: 90px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--hair-lit), transparent);
+}
+
+.slide h3 {
+    font-size: var(--s-2);
+    margin-bottom: 8px;
+}
+
+.slide-role {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--cyan);
+    margin-bottom: 16px;
+}
+
+.slide-bio {
+    color: var(--text-soft);
+    font-size: 0.95rem;
+    line-height: 1.62;
+    max-width: 46ch;
+    margin-bottom: 18px;
+}
+
+.slide-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 22px;
+}
+
+.slide-tags li {
+    padding: 5px 12px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--hair);
+    background: rgba(106, 216, 254, 0.04);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+}
+
+.slide-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 20px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--hair);
+    font-size: 0.86rem;
+    font-weight: 550;
+    color: var(--text-soft);
+    transition: background-color 0.25s, color 0.25s, border-color 0.25s,
+        transform 0.25s var(--ease);
+}
+
+.slide-link:hover {
+    background: var(--text);
+    border-color: var(--text);
+    color: var(--ink-950);
+    transform: translateY(-2px);
+}
+
+/* -- controles ------------------------------------------------------------- */
+.stage-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 22px;
+}
+
+.stage-btn {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid var(--hair);
+    color: var(--text-soft);
+    transition: background-color 0.25s, color 0.25s, border-color 0.25s,
+        transform 0.25s var(--ease);
+}
+
+.stage-btn:hover {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: var(--ink-950);
+    transform: translateY(-2px);
+}
+
+.stage-rail {
+    position: relative;
+    flex: 1;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--hair);
+    overflow: hidden;
+}
+
+.stage-rail span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: calc(100% / var(--total, 6));
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--indigo));
+    transform: translateX(calc(var(--i, 0) * 100%));
+    transition: transform 0.6s var(--ease-io);
+}
+
+.stage-count {
+    font-family: var(--font-mono);
+    font-size: var(--s--1);
+    letter-spacing: 0.14em;
+    color: var(--text-faint);
+}
+
+.stage-hint {
+    display: block;
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-size: var(--s--1);
+    letter-spacing: 0.12em;
+    color: var(--text-faint);
+    text-align: center;
+}
+
+/* ------------------------------------------------------------- projetos -- */
+.work {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: clamp(1rem, 2.5vw, 1.5rem);
+    align-items: start;
+}
+
+.work-side {
+    display: grid;
+    gap: clamp(1rem, 2.5vw, 1.5rem);
+    margin-top: clamp(0px, 4vw, 56px);
+}
+
+.work-item {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(1.5rem, 3.5vw, 2.25rem);
+    border: 1px solid var(--hair);
+    border-radius: var(--r);
+    background: rgba(12, 20, 31, 0.5);
+    transition: border-color 0.3s, transform 0.35s var(--ease);
+}
+
+.work-item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+        340px circle at var(--mx, 50%) var(--my, -20%),
+        rgba(106, 216, 254, 0.13),
+        transparent 62%
+    );
+    opacity: 0;
+    transition: opacity 0.35s var(--ease);
+}
+
+.work-item:hover::before {
+    opacity: 1;
+}
+
+.work-item:hover {
+    border-color: var(--hair-lit);
+    transform: translateY(-4px);
+}
+
+/* Faixa larga: ocupa as duas colunas do bloco. Um terceiro card na coluna
+   lateral desequilibrava o arranjo (coluna de ~700px contra o card grande
+   de 380px), então a novidade ganha a linha de cima e o resto fica como era. */
+.work-item--wide {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
+    flex-wrap: wrap;
+}
+
+.work-item--wide p {
+    margin-bottom: 0;
+}
+
+.work-item--wide .btn {
+    flex: none;
+}
+
+.work-item--lead {
+    min-height: clamp(280px, 34vw, 380px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background: linear-gradient(
+            160deg,
+            rgba(91, 107, 245, 0.18),
+            transparent 55%
+        ),
+        rgba(12, 20, 31, 0.62);
+}
+
+.work-item h3 {
+    font-size: var(--s-2);
+    margin-bottom: 10px;
+}
+
+.work-item--sm h3 {
+    font-size: var(--s-1);
+}
+
+.work-item p {
+    color: var(--text-dim);
+    font-size: 0.94rem;
+    margin-bottom: 16px;
+    max-width: 46ch;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 16px;
+    padding: 4px 12px;
+    border-radius: var(--r-pill);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.pill::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.pill--live {
+    color: var(--mint);
+    background: rgba(126, 226, 168, 0.1);
+}
+
+.pill--wip {
+    color: var(--amber);
+    background: rgba(255, 196, 107, 0.1);
+}
+
+.pill--next {
+    color: var(--text-dim);
+    background: rgba(125, 148, 170, 0.1);
+}
+
+/* ------------------------------------------------------------ portfólio -- */
+/* A vitrine dos jogos (home e portfolio.html). Os cartões continuam sendo
+   `.work-item`: borda, elevação no hover e o holofote que segue o cursor
+   vêm de lá, e o JS já procura essa classe — nenhum script novo. O que
+   muda é o miolo: uma capa encostada no topo e o texto embaixo.
+
+   As capas são 16:9 e cortadas por `object-fit: cover`, porque a arte de
+   cada jogo tem uma proporção. A pixel art foi ampliada em fator inteiro
+   (2x, 3x, 4x) ANTES de ir para o arquivo: o navegador só reduz, e reduzir
+   a partir de um múltiplo inteiro preserva o traço. Ampliar pixel art por
+   fator quebrado, no CSS, dá degrau desigual. */
+.games {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+/* Três cartões: em duas colunas o terceiro sobraria sozinho na linha de
+   baixo (o mesmo problema da grade da equipe). Então é três ou uma. */
+.games--trio {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.games--stack {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.game {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.game-cover {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-bottom: 1px solid var(--hair);
+    background: var(--ink-850);
+}
+
+.game-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s var(--ease);
+}
+
+.game:hover .game-cover img {
+    transform: scale(1.035);
+}
+
+.game-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+/* numa coluna flex a pílula esticaria até a largura inteira do cartão */
+.game-body .pill {
+    align-self: flex-start;
+}
+
+.game-body .tool-list {
+    margin-bottom: 20px;
+}
+
+.game-body .regua {
+    margin-bottom: 22px;
+    padding-top: 18px;
+}
+
+.work-item .game-tagline {
+    color: var(--text-soft);
+    font-style: italic;
+}
+
+/* Os botões descem para o pé do cartão: assim alinham mesmo quando os
+   textos têm tamanhos diferentes. O vão de 24px é de propósito, o botão
+   líquido precisa de para onde crescer (ver `.hero-actions`). */
+.game-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 24px;
+    margin-top: auto;
+    padding-top: 4px;
+}
+
+/* Versão larga (portfolio.html): capa à esquerda, texto à direita. A capa
+   estica até a altura do texto e a imagem a preenche por posição absoluta. */
+.game--feature {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+}
+
+.game--feature .game-cover {
+    aspect-ratio: auto;
+    min-height: 260px;
+    border-bottom: 0;
+    border-right: 1px solid var(--hair);
+}
+
+.game--feature .game-cover img {
+    position: absolute;
+    inset: 0;
+}
+
+/* Capa de projeto que ainda não tem arte: a malha isométrica do fundo do
+   site, em pequeno, e um aviso honesto. Melhor do que inventar uma imagem
+   de um jogo que ainda não tem cara. */
+.game-cover--conceito {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 12px;
+    background: radial-gradient(
+            70% 90% at 50% 45%,
+            rgba(91, 107, 245, 0.22),
+            transparent 70%
+        ),
+        repeating-linear-gradient(
+            30deg,
+            transparent 0 41px,
+            rgba(106, 216, 254, 0.1) 41px 42px
+        ),
+        repeating-linear-gradient(
+            -30deg,
+            transparent 0 41px,
+            rgba(106, 216, 254, 0.1) 41px 42px
+        ),
+        var(--ink-850);
+}
+
+.game-cover--conceito svg {
+    width: 44px;
+    color: var(--cyan);
+    opacity: 0.75;
+}
+
+.game-cover--conceito span {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+/* rótulo entre os dois blocos da home ("No forno") */
+.work-label {
+    display: flex;
+    margin: clamp(2.25rem, 5vw, 3.25rem) 0 1.1rem;
+}
+
+/* botões depois da grade; 28px de vão pelo mesmo motivo do `.hero-actions` */
+.work-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px 28px;
+    margin-top: clamp(2rem, 5vw, 3rem);
+}
+
+/* Fileira de números do topo do portfólio. Usa o `.hero-stat` da home; ele
+   vira largura total e centralizado no celular (faz sentido no herói), e
+   aqui os números ficam lado a lado. */
+.facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem clamp(1.75rem, 5vw, 3.5rem);
+    margin-top: clamp(1.75rem, 4vw, 2.5rem);
+    padding-top: 22px;
+    border-top: 1px solid var(--hair);
+}
+
+.facts .hero-stat {
+    width: auto;
+    justify-content: flex-start;
+}
+
+.nota {
+    max-width: 62ch;
+    margin: 0 0 clamp(1.5rem, 3vw, 2.25rem);
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+
+@media (max-width: 900px) {
+    .games--trio,
+    .game--feature {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .game--feature .game-cover {
+        aspect-ratio: 16 / 9;
+        min-height: 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--hair);
+    }
+
+    .game--feature .game-cover img {
+        position: static;
+    }
+}
+
+@media (max-width: 700px) {
+    .games {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* Quatro números numa linha só não cabem no celular e sobravam 2 + 1 + 1.
+   Em duas colunas ficam 2 x 2. */
+@media (max-width: 560px) {
+    .facts--grade {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* -------------------------------------------------------------- contato -- */
+.contact {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+    align-items: end;
+    padding: clamp(1.75rem, 4.5vw, 3.25rem);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--hair-lit);
+    overflow: hidden;
+    background: linear-gradient(
+            140deg,
+            rgba(106, 216, 254, 0.12),
+            rgba(139, 92, 246, 0.06) 45%,
+            transparent 70%
+        ),
+        rgba(10, 17, 26, 0.72);
+}
+
+.contact::after {
+    content: "";
+    position: absolute;
+    inset: auto -10% -60% auto;
+    width: 420px;
+    aspect-ratio: 1;
+    background: radial-gradient(
+        circle,
+        rgba(91, 107, 245, 0.22),
+        transparent 66%
+    );
+    pointer-events: none;
+}
+
+.contact > * {
+    position: relative;
+}
+
+.contact h2 {
+    font-size: var(--s-3);
+    margin-bottom: 14px;
+}
+
+.contact p {
+    color: var(--text-soft);
+    max-width: 46ch;
+}
+
+.email-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 26px;
+    padding: 14px 24px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--hair-lit);
+    background: rgba(106, 216, 254, 0.06);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(0.84rem, 0.7rem + 0.6vw, 1.05rem);
+    word-break: break-word;
+    transition: background-color 0.25s, color 0.25s, border-color 0.25s,
+        transform 0.25s var(--ease);
+}
+
+.email-link .icon {
+    flex: none;
+    color: var(--cyan);
+    transition: color 0.25s;
+}
+
+.email-link:hover {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: var(--ink-950);
+    transform: translateY(-2px);
+}
+
+.email-link:hover .icon {
+    color: var(--ink-950);
+}
+
+.social-list {
+    display: grid;
+    gap: 8px;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 18px;
+    border-radius: var(--r);
+    border: 1px solid var(--hair);
+    background: rgba(106, 216, 254, 0.03);
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--text-soft);
+    transition: border-color 0.25s, color 0.25s, background-color 0.25s,
+        transform 0.25s var(--ease);
+}
+
+.social-link .icon:first-child {
+    color: var(--text-dim);
+    transition: color 0.25s;
+}
+
+.social-link .go {
+    margin-left: auto;
+    color: var(--text-faint);
+    transition: transform 0.28s var(--ease), color 0.25s;
+}
+
+.social-link:hover {
+    color: var(--text);
+    border-color: var(--hair-lit);
+    background: rgba(106, 216, 254, 0.08);
+    transform: translateX(3px);
+}
+
+.social-link:hover .go {
+    transform: translateX(3px);
+    color: var(--cyan);
+}
+
+.social-link[data-brand="github"]:hover .icon:first-child {
+    color: var(--text);
+}
+
+.social-link[data-brand="instagram"]:hover .icon:first-child {
+    color: #e1306c;
+}
+
+.social-link[data-brand="linkedin"]:hover .icon:first-child {
+    color: #4aa3df;
+}
+
+.social-link[data-brand="itch"]:hover .icon:first-child {
+    color: #fa5c5c;
+}
+
+/* --------------------------------------------------------------- rodapé -- */
+.site-footer {
+    border-top: 1px solid var(--hair);
+    padding-block: clamp(2.5rem, 6vw, 3.75rem) 1.75rem;
+    background: rgba(5, 9, 15, 0.65);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) repeat(auto-fit, minmax(130px, 1fr));
+    gap: clamp(1.75rem, 4vw, 3rem);
+    margin-bottom: 2.5rem;
+}
+
+.footer-about p {
+    color: var(--text-faint);
+    font-size: var(--s--1);
+    max-width: 38ch;
+    margin-top: 14px;
+}
+
+.footer-col h4 {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 14px;
+    font-weight: 500;
+}
+
+.footer-col ul {
+    display: grid;
+    gap: 9px;
+}
+
+.footer-col a {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    transition: color 0.2s;
+}
+
+.footer-col a:hover {
+    color: var(--cyan);
+}
+
+.footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 1.75rem;
+    border-top: 1px solid rgba(126, 190, 232, 0.07);
+    font-size: var(--s--1);
+    color: var(--text-faint);
+}
+
+/* --------------------------------------------------------------- ícones -- */
+.icon {
+    width: 1em;
+    height: 1em;
+    font-size: 1.15em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.icon--lg {
+    font-size: 1.45em;
+}
+
+.icon--brand {
+    fill: currentColor;
+    stroke: none;
+}
+
+/* -------------------------------------------------------------- páginas -- */
+.page-hero {
+    padding-block: clamp(2.5rem, 7vw, 4.5rem) clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.page-hero h1 {
+    font-size: var(--s-3);
+    margin: 16px 0 14px;
+}
+
+.back-link {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    font-family: var(--font-mono);
+    font-size: var(--s--1);
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: var(--cyan);
+}
+
+.back-link .icon {
+    transition: transform 0.28s var(--ease);
+}
+
+.back-link:hover .icon {
+    transform: translateX(-4px);
+}
+
+.tool-groups {
+    display: grid;
+    gap: clamp(1rem, 2.5vw, 1.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+}
+
+.tool-group {
+    position: relative;
+    isolation: isolate;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    border: 1px solid var(--hair);
+    border-radius: var(--r);
+    background: rgba(12, 20, 31, 0.5);
+    transition: border-color 0.3s, transform 0.35s var(--ease);
+}
+
+.tool-group:hover {
+    border-color: var(--hair-lit);
+    transform: translateY(-3px);
+}
+
+.tool-group h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--s--1);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--cyan);
+    margin-bottom: 18px;
+}
+
+/* usado só na oferta de contato.html: o card de ferramenta é rótulo e
+   fichas, o de serviço precisa de uma linha de contexto no meio */
+.tool-group p {
+    margin: -4px 0 16px;
+    font-size: 0.9rem;
+    color: var(--text-soft);
+}
+
+.tool-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tool-list li {
+    padding: 6px 13px;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--hair);
+    background: rgba(106, 216, 254, 0.03);
+    font-size: 0.86rem;
+    color: var(--text-soft);
+}
+
+/* a nota sobre a formalização: fica visível para quem precisa dela, sem
+   virar aviso — daí o recuo à esquerda em vez de caixa com borda */
+.nota-formal {
+    max-width: 62ch;
+    margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+    padding-left: 16px;
+    border-left: 2px solid var(--hair-lit);
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+
+/* grade simples de 3 colunas usada em portfolio.html */
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+/* Com 4 cards, `auto-fit` cai em 3 colunas numa faixa de larguras e deixa o
+   quarto sozinho na linha de baixo (o mesmo problema da grade da equipe).
+   Duas colunas por padrão, uma no celular, quatro só onde cabe. */
+@media (min-width: 1100px) {
+    .status-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Grade de membros usada em sobre.html, para os quatro integrantes atuais.
+   Tentei `auto-fit` primeiro — e ele piora as coisas aqui: para 4 itens
+   existe sempre uma faixa de largura em que ele resolve para 3 colunas, e a
+   quarta pessoa sobra sozinha numa linha vazia. Medido: acontecia de ~640px
+   a ~920px de viewport, o que cobre tablet em pé (768, 820) e janela
+   dividida num notebook — mais comum que a faixa estreita que o grid fixo
+   de 6/3/2 colunas quebrava antes.
+
+   A saída é pular o 3 de propósito: duas colunas por padrão (2×2, ninguém
+   sobra) e quatro só a partir de onde uma fileira inteira cabe confortável.
+   Com exatamente 4 pessoas, nenhum dos dois estados deixa órfão. Se o time
+   mudar de tamanho de novo, refaça esta conta — ela é para 4, não genérica. */
+.grid--team {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.9rem, 2vw, 1.25rem);
+}
+
+@media (min-width: 1000px) {
+    .grid--team {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.member {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: clamp(1.25rem, 3vw, 1.6rem) 0.9rem;
+    border: 1px solid var(--hair);
+    border-radius: var(--r);
+    background: rgba(12, 20, 31, 0.5);
+    transition: border-color 0.3s, transform 0.35s var(--ease);
+}
+
+.member:hover {
+    border-color: var(--hair-lit);
+    transform: translateY(-3px);
+}
+
+.member-avatar {
+    width: 82px;
+    height: 82px;
+    margin-bottom: 15px;
+    border-radius: 50%;
+    padding: 2px;
+    background: linear-gradient(140deg, var(--cyan), var(--indigo));
+}
+
+.member-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--ink-900);
+    background: var(--ink-800);
+}
+
+.member-name {
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 3px;
+}
+
+.member-role {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    margin-bottom: 14px;
+    word-break: break-all;
+}
+
+.member-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: auto;
+    padding: 6px 14px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--hair);
+    font-size: 0.78rem;
+    color: var(--text-soft);
+    transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+}
+
+.member-link:hover {
+    background: var(--text);
+    border-color: var(--text);
+    color: var(--ink-950);
+}
+
+/* -------------------------------------------------------------- reveal  -- */
+.js .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.75s var(--ease), transform 0.75s var(--ease);
+}
+
+.js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+.js .stagger > * {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.65s var(--ease), transform 0.65s var(--ease);
+}
+
+.js .stagger.is-visible > * {
+    opacity: 1;
+    transform: none;
+}
+
+.js .stagger.is-visible > *:nth-child(2) {
+    transition-delay: 0.08s;
+}
+
+.js .stagger.is-visible > *:nth-child(3) {
+    transition-delay: 0.16s;
+}
+
+.js .stagger.is-visible > *:nth-child(4) {
+    transition-delay: 0.24s;
+}
+
+.js .stagger.is-visible > *:nth-child(5) {
+    transition-delay: 0.32s;
+}
+
+.js .stagger.is-visible > *:nth-child(6) {
+    transition-delay: 0.4s;
+}
+
+/* =========================================================== responsivo == */
+
+/* trilhos e chamadas só existem quando sobra margem lateral de verdade */
+@media (max-width: 1240px) {
+    .hero-note {
+        display: none;
+    }
+}
+
+@media (max-width: 1280px) {
+    .hero-rail {
+        display: none;
+    }
+}
+
+@media (max-width: 980px) {
+    .hero {
+        min-height: 0;
+        padding-block: clamp(1.5rem, 4vh, 2.5rem) clamp(2rem, 5vh, 3.5rem);
+    }
+
+    /* o mascote sai de trás do texto e vira uma peça própria em cima:
+       sobreposição em tela estreita só atrapalha a leitura */
+    /* no celular o mascote volta ao fluxo normal, entao a orbita nao
+       transborda o palco e a reserva de altura so criava sobra morta */
+    .hero-stage {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .hero-mid {
+        padding-top: 0;
+    }
+
+    /* relative, não static: os anéis são absolutos e precisam do orbe como
+       bloco contentor, senão passam a medir 116% do palco inteiro */
+    .hero-orb {
+        position: relative;
+        top: auto;
+        left: auto;
+        order: -1;
+        align-self: center;
+        margin-top: clamp(0.75rem, 3vh, 2rem);
+        width: min(186px, 44vw);
+        transform: none;
+        translate: none;
+        margin-bottom: clamp(1rem, 3vh, 1.75rem);
+    }
+
+    /* a órbita encolhe no celular para não vazar da tela nem encostar
+       no dock, já que ali ela transborda a caixa do mascote */
+    .orbit {
+        width: 150%;
+    }
+
+    /* no celular as duas linhas ficam coladas; o mascote vai para cima */
+    .hero-l3 {
+        margin-top: 0;
+    }
+
+    .hero-base {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .hero-stat {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .why {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .why-core {
+        grid-column: 1 / -1;
+        order: -1;
+    }
+
+    .why-core img {
+        width: min(140px, 34vw);
+    }
+
+    .why-col--l {
+        justify-items: stretch;
+    }
+
+    .why-col--r {
+        margin-top: 0;
+    }
+
+    .why-card,
+    .why-card.o1,
+    .why-card.o2,
+    .why-card.o3,
+    .why-card.o4 {
+        width: 100%;
+        margin: 0;
+    }
+
+    .course,
+    .contact,
+    .work {
+        grid-template-columns: 1fr;
+    }
+
+    .work-side {
+        margin-top: 0;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    }
+
+    .work-item--lead {
+        min-height: 0;
+    }
+}
+
+@media (max-width: 860px) {
+    .dock-toggle {
+        display: grid;
+    }
+
+    .dock-inner {
+        padding-right: 9px;
+    }
+
+    .dock-panel {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        right: 0;
+        padding: 12px;
+        border-radius: 22px;
+        border: 1px solid var(--hair);
+        background: #080e16;
+        box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.95);
+        display: grid;
+        gap: 4px;
+        transform-origin: top;
+        transform: scaleY(0.92) translateY(-6px);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s var(--ease), transform 0.25s var(--ease),
+            visibility 0.25s;
+    }
+
+    .dock-panel.is-open {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+    }
+
+    .dock-nav {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+    }
+
+    .dock-link {
+        padding: 13px 16px;
+        border-radius: 14px;
+        font-size: 1rem;
+    }
+
+    .dock-social {
+        justify-content: center;
+        gap: 8px;
+        margin: 10px 0 4px;
+        padding: 12px 0 0;
+        border-left: 0;
+        border-top: 1px solid var(--hair);
+    }
+
+    .icon-btn {
+        width: 44px;
+        height: 44px;
+    }
+
+    .dock-cta {
+        justify-content: center;
+        padding-block: 14px;
+    }
+}
+
+@media (max-width: 700px) {
+    /* coluna única: em 2 colunas num celular o chanfro come a largura
+       útil e o texto fica espremido */
+    .why {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* retrato em cima, texto alinhado à esquerda — centralizar uma bio
+       inteira em tela estreita atrapalha a leitura */
+    .slide {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: start;
+        gap: 1.25rem;
+    }
+
+    /* empilhado, o retrato fica no meio do card e não tem piso onde pisar:
+       a margem negativa que o faz sangrar no desktop só comeria o vão até
+       o texto */
+    .slide-retrato {
+        --h: clamp(180px, 46vw, 240px);
+        margin-bottom: 0;
+    }
+
+    .slide-bio {
+        font-size: 0.9rem;
+    }
+
+    .stage-ghost {
+        font-size: clamp(3.5rem, 22vw, 6rem);
+    }
+
+    .roster-btn {
+        width: 44px;
+        height: 44px;
+        margin-left: -12px;
+    }
+
+    .roster-btn.is-on {
+        transform: translateY(-5px) scale(1.12);
+    }
+
+    .hero-base {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 520px) {
+    :root {
+        --dock-h: 54px;
+    }
+
+    .roster {
+        padding: 6px;
+    }
+
+    .roster-btn {
+        width: 38px;
+        height: 38px;
+        margin-left: -10px;
+    }
+
+    .roster-btn::after {
+        width: 15px;
+        height: 15px;
+        font-size: 0.52rem;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .footer-about {
+        grid-column: 1 / -1;
+    }
+}
+
+/* ------------------------------------------------------- menos movimento -- */
+/* Reduzido ao mínimo a pedido do estúdio, em 03/08/2026.
+   A máquina do Milan reporta `prefers-reduced-motion: reduce` — o Windows
+   marca isso quando "efeitos de animação" está desligado, que é o padrão
+   em muita instalação. Enquanto este bloco desligava o parallax de
+   ponteiro e o deslizamento dos blocos, o site chegava estático a ele e a
+   uma fatia grande dos visitantes, o que não é o que o estúdio quer.
+
+   Sobra só a rolagem instantânea, que é a parte da preferência que não
+   custa nada visualmente. As animações de JS (título que se digita,
+   brilho líquido e mascote animado) também deixaram de consultá-la —
+   ver as notas em js/main.js. */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+@media (hover: none) {
+    .btn:hover,
+    .social-link:hover,
+    .email-link:hover,
+    .work-item:hover,
+    .why-card:hover,
+    .member:hover,
+    .tool-group:hover {
+        transform: none;
+    }
+}
+
+/* -- fundo mais leve em celular/tablet e em janela estreita ---------------
+   Medido antes desta correção: `document.getAnimations()` contava 38
+   animações contínuas rodando ao mesmo tempo só de fundo, na carga inicial
+   da home — sendo 18 delas (6 constelações × 3: a deriva do conjunto e o
+   giro dos dois anéis internos de cada uma) as `.orbit-mini` espalhadas
+   pelas bordas. Nenhuma é cara sozinha, mas a SOMA de camadas sempre
+   ativas, sempre com `will-change: transform`, é o tipo de coisa que
+   aperta a memória de GPU em aparelho fraco e trava a rolagem — em
+   qualquer tela, o navegador tem que manter todas essas camadas prontas
+   para compor, mesmo as que mal aparecem.
+
+   O corte é por `hover: none` (pega touch, que é onde os aparelhos fracos
+   se concentram) OU por largura (pega também janela estreita num desktop
+   potente, onde as constelações já nascem cortadas pela lateral). O anel
+   central perto do mascote fica de fora de propósito: é peça única, é a
+   âncora visual do herói, e apagá-la custaria muito mais em beleza do que
+   economiza em desempenho. */
+@media (max-width: 860px), (hover: none) {
+    .backdrop-cubes {
+        display: none;
+    }
+
+    .backdrop-stars--far {
+        display: none;
+    }
+
+    .backdrop::before,
+    .backdrop-mist {
+        animation: none;
+        will-change: auto;
+    }
+}
+
+/* -- modo leve (`html.lite`) -----------------------------------------------
+   Ligado pelo <head> (máquina fraca conhecida, economia de dados, ?leve=N)
+   ou pelo detector de lentidão de js/main.js, que mede quadros reais. O
+   corte por `hover: none`/largura acima protege celular; PC fraco tem tela
+   larga e mouse, então passava batido — este bloco é o que pega ele.
+
+   O que sai, por ordem de custo em GPU/CPU fraca:
+   - `backdrop-filter` no dock e no cluster de rostos: o navegador refaz o
+     borrão por trás a CADA quadro de rolagem. Vira fundo quase opaco.
+   - Todas as camadas de fundo animadas ou de parallax: viram estáticas e
+     menores (`inset: 0` em vez das folgas de 620–780px que existiam só
+     para o parallax percorrer) — menos textura de GPU para manter.
+   - Aneis do herói, faíscas, flutuação, gradiente líquido dos botões.
+   - O grão: camada fixa de tela inteira composta por cima de tudo.
+   O que fica: grade isométrica, uma camada de estrelas, o anel central
+   (parado), a tipografia e o layout — o site continua reconhecível. */
+.lite .grain,
+.lite .backdrop-cubes,
+.lite .backdrop-stars--far,
+.lite .backdrop-mist {
+    display: none;
+}
+
+.lite .backdrop::before {
+    inset: 0;
+    animation: none;
+    will-change: auto;
+}
+
+.lite .backdrop-grid,
+.lite .backdrop-grid--perto,
+.lite .backdrop-stars {
+    inset: 0;
+    translate: none;
+    animation: none;
+    will-change: auto;
+}
+
+.lite .orbit-spin,
+.lite .orbit-static use,
+.lite .hero-mascot,
+.lite .why-core img,
+.lite .hero-cue i,
+.lite .btn--solid::before {
+    animation: none;
+    will-change: auto;
+}
+
+.lite .btn--solid::before {
+    filter: none;
+}
+
+.lite .dock-inner {
+    background: rgba(8, 14, 22, 0.94);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.lite .roster {
+    background: rgba(12, 20, 31, 0.9);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.lite .hero-l1::after,
+.lite .hero-l3::after {
+    display: none;
+}
